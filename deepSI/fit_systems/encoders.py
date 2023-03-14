@@ -20,6 +20,8 @@ class SS_encoder(System_torch):
         length of the past inputs (u) considered as input for the encoder
     k0 : int
         length of the encoder max(na,nb)
+    nb_units : int
+        Add a custom neurons number per layer for alls neural net used.
     e_net : 
 
 
@@ -37,7 +39,7 @@ class SS_encoder(System_torch):
     random : np.random.RandomState
         unique random generated initialized with seed (only created ones called)
     '''
-    def __init__(self, nx = 10, na=20, nb=20, feedthrough=False):
+    def __init__(self, nx = 10, na=20, nb=20, nb_units=64, feedthrough=False):
         super(SS_encoder,self).__init__()
         self.na, self.nb = na, nb
         self.k0 = max(self.na, self.nb)
@@ -46,17 +48,17 @@ class SS_encoder(System_torch):
         from deepSI.utils import simple_res_net, feed_forward_nn
         self.e_net = simple_res_net
         self.e_n_hidden_layers = 2
-        self.e_n_nodes_per_layer = 64
+        self.e_n_nodes_per_layer = nb_units
         self.e_activation = nn.Tanh
 
         self.f_net = simple_res_net
         self.f_n_hidden_layers = 2
-        self.f_n_nodes_per_layer = 64
+        self.f_n_nodes_per_layer = nb_units
         self.f_activation = nn.Tanh
 
         self.h_net = simple_res_net
         self.h_n_hidden_layers = 2
-        self.h_n_nodes_per_layer = 64
+        self.h_n_nodes_per_layer = nb_units
         self.h_activation = nn.Tanh
         
         self.feedthrough = feedthrough

@@ -22,8 +22,10 @@ class SS_encoder(System_torch):
         length of the encoder max(na,nb)
     nb_units : int
         Add a custom neurons number per layer for alls neural net used.
-    e_net : 
-
+    nb_layers : int
+        number of layers involve per neural network (encoder, model and observation)
+    act_func : torch.Module
+        activation function to use for all hidden layer of all neural network of the model
 
     observation_space : gym.space or None
         The input shape of output y. (None is a single unbounded float)
@@ -39,7 +41,7 @@ class SS_encoder(System_torch):
     random : np.random.RandomState
         unique random generated initialized with seed (only created ones called)
     '''
-    def __init__(self, nx = 10, na=20, nb=20, nb_units=64, feedthrough=False):
+    def __init__(self, nx = 10, na=20, nb=20, nb_units=64, nb_layers=2, act_func=nn.Tanh, feedthrough=False):
         super(SS_encoder,self).__init__()
         self.na, self.nb = na, nb
         self.k0 = max(self.na, self.nb)
@@ -47,19 +49,19 @@ class SS_encoder(System_torch):
 
         from deepSI.utils import simple_res_net, feed_forward_nn
         self.e_net = simple_res_net
-        self.e_n_hidden_layers = 2
+        self.e_n_hidden_layers = nb_layers
         self.e_n_nodes_per_layer = nb_units
-        self.e_activation = nn.Tanh
+        self.e_activation = act_func
 
         self.f_net = simple_res_net
-        self.f_n_hidden_layers = 2
+        self.f_n_hidden_layers = nb_layers
         self.f_n_nodes_per_layer = nb_units
-        self.f_activation = nn.Tanh
+        self.f_activation = act_func
 
         self.h_net = simple_res_net
-        self.h_n_hidden_layers = 2
+        self.h_n_hidden_layers = nb_layers
         self.h_n_nodes_per_layer = nb_units
-        self.h_activation = nn.Tanh
+        self.h_activation = act_func
         
         self.feedthrough = feedthrough
 
